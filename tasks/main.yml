@@ -1,0 +1,6 @@
+---
+- name: include environment
+  include: environment.yml
+
+- name: include hexaa-frontend
+  include: hexaa-frontend.yml

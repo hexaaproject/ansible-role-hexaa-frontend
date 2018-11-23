@@ -1,0 +1,26 @@
+---
+- name: Ensure network exists
+  docker_network:
+    name: "{{ docker_network_name_frontend }}"
+    state: present
+
+
+
+- name: stop hexaa-frontend
+  tags: [web]
+  docker_container:
+    name: hexaa-frontend
+    state: absent
+
+- name: start hexaa-frontend
+  tags: [web]
+  docker_container:
+    name: hexaa-frontend
+    image: hexaaproject/hexaa-newui:for-dev-ansible
+    networks:
+      - name: "{{ docker_network_name_frontend }}"
+    volumes:
+      - "{{ frontend_config_dir.path }}/parameters.yml:/opt/hexaa-newui/app/config/parameters.yml:ro"
+      # export for the web container
+      - /opt/hexaa-newui/web
+      - /var/run/php

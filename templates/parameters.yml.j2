@@ -1,0 +1,26 @@
+parameters:
+    secret: {{ HEXAA_BACKEND_SECRET }}
+    shib_auth_username_attribute: eppn
+    #shib_auth_username_attribute: eduPersonPrincipalName
+    shib_auth_module_attribute: Shib-Application-ID
+    #shib_auth_module_attribute: Shib-Application-ID
+    shib_attribute_map:
+        eppn: eppn
+        #eppn: eduPersonPrincipalName
+        displayName: displayName
+        email: mail
+    shib_auth_logout_return_path: homepage
+    hexaa_base_uri: {{ HEXAA_BACKEND_URI }}api/
+    #hexaa_permissionprefix: 'some:entitlement:prefix:hexaa'
+    hexaa_scoped_key: {{ HEXAA_FRONTEND_SCOPED_KEY }}
+    # TODO: ansible-role-hexaa-frontend
+    invitation_config:
+        subject: '[HEXAA] invitation'
+        from: no_reply@apitest.hexaa.eu
+        reply-to: no_reply@apitest.hexaa.eu
+        footer: 'sincerely: apitest.hexaa.eu'
+    mailer_transport:  {{ HEXAA_MAILER_TRANSPORT }}
+    mailer_host:       {{ HEXAA_MAILER_HOST }}
+    mailer_port:       {{ HEXAA_MAILER_PORT }}
+    mailer_user:       {{ HEXAA_MAILER_USER }}
+    mailer_password:   {{ HEXAA_MAILER_PASSWORD }}
