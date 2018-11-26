@@ -38,11 +38,11 @@
     path: "{{ frontend_config_dir.path }}"
     mode: 0755
 
-- name: copy Shibboleth config
+- name: copy Shibboleth and Apache config
   copy:
-    src: files/shibboleth
+    src: files/
     dest: "{{ frontend_config_dir.path }}"
-- name: copy apache config
-  copy:
-    src: files/default-hexaa.conf
-    dest: "{{ frontend_config_dir.path }}/default-hexaa.conf"
+
+- name: use the redirect config on port 80
+  shell: "mv -f {{ frontend_config_dir.path }}/default-hexaa-ssl-redirect.conf {{ frontend_config_dir.path }}/default-hexaa.conf"
+  when: HEXAA_FRONTEND_URL_PROTO == "https"
