@@ -37,3 +37,12 @@
   file:
     path: "{{ frontend_config_dir.path }}"
     mode: 0755
+
+- name: copy Shibboleth config
+  copy:
+    src: files/shibboleth
+    dest: "{{ frontend_config_dir.path }}"
+- name: copy apache config
+  copy:
+    src: files/default-hexaa.conf
+    dest: "{{ frontend_config_dir.path }}/default-hexaa.conf"
