@@ -10,11 +10,36 @@ HEXAA_FRONTEND_SCOPED_KEY: ""
 #HEXAA_BACKEND_URL:
 #HEXAA_FRONTEND_URL:
 
-# path to folder with fullchain.pem and privkey.pem in it:
-#HEXAA_FRONTEND_CERTIFICATE_PATH:
-
 HEXAA_MAILER_TRANSPORT: sendmail
 HEXAA_MAILER_HOST:      ~
 HEXAA_MAILER_PORT:      ~
 HEXAA_MAILER_USER:      ~
 HEXAA_MAILER_PASSWORD:  ~
+
+# path to folder on the target with fullchain.pem and privkey.pem in it:
+HEXAA_FRONTEND_CERTIFICATE_PATH: /etc/letsencrypt/live/
+
+
+# path to folder with sp-cert.pem and sp-key.pem
+# (generating: shib-keygen -f -u _shibd -h staging.hexaa.eu -y 3 -e https://staging.hexaa.eu/shibboleth -o /etc/shibboleth)
+SHIBBOLETH_CERTIFICATE_PATH: /etc/shibboleth
+
+SHIBBOLETH_SP_ENTITYID: https://domain.tld/shibboleth
+
+
+# idp or discovery
+SHIBBOLETH_LOGIN_TYPE: idp
+
+SHIBBOLETH_DISCOVERY_SERVICE: ~
+SHIBBOLETH_IDP_URL:           ~
+
+
+SHIBBOLETH_METADATA_PROVIDERS:
+  - type: xml
+    path:
+  - type: xml
+    url: https://
+  - type: dynamic
+    url_template: https://mdx.domain.tld/entities/$entityID
+    ignore_transport: false
+    cert_path: ~

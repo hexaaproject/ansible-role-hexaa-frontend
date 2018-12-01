@@ -20,43 +20,29 @@
     -->
 
     <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
-    <ApplicationDefaults entityID="https://dev.hexaa.eu/shibboleth-sp"
+    <ApplicationDefaults entityID="{{ SHIBBOLETH_SP_ENTITYID }}"
                          REMOTE_USER="eppn persistent-id targeted-id">
-
-        <!--
-        Controls session lifetimes, address checks, cookie handling, and the protocol handlers.
-        You MUST supply an effectively unique handlerURL value for each of your applications.
-        The value defaults to /Shibboleth.sso, and should be a relative path, with the SP computing
-        a relative value based on the virtual host. Using handlerSSL="true", the default, will force
-        the protocol to be https. You should also set cookieProps to "https" for SSL-only sites.
-        Note that while we default checkAddress to "false", this has a negative impact on the
-        security of your site. Stealing sessions via cookie theft is much easier with this disabled.
-        -->
         <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
                   checkAddress="false" handlerSSL="false" cookieProps="http">
 
-            <!--
-            Configures SSO for a default IdP. To allow for >1 IdP, remove
-            entityID property and adjust discoveryURL to point to discovery service.
-            (Set discoveryProtocol to "WAYF" for legacy Shibboleth WAYF support.)
-            You can also override entityID on /Login query string, or in RequestMap/htaccess.
-            -->
-            <!-- SSO entityID="https://l-aai.sztaki.hu/idp" -->
 
-            <!-- TODO -->
-            <!--<SSO discoveryProtocol="SAMLDS" discoveryURL="https://discovery.eduid.hu">
-              SAML2
-          </SSO>-->
+            {% if SHIBBOLETH_LOGIN_TYPE == 'discovery' -%}
+                <SSO discoveryProtocol="SAMLDS" discoveryURL="{{ SHIBBOLETH_DISCOVERY_SERVICE }}">
+                    SAML2
+                </SSO>
+            {% endif %}
 
-            <SSO entityID="https://apitest.hexaa.eu/simplesaml/saml2/idp/metadata.php">
-                SAML2 SAML1
-            </SSO>
+            {% if SHIBBOLETH_LOGIN_TYPE == 'idp' -%}
+                <SSO entityID="{{ SHIBBOLETH_IDP_URL }}">
+                    SAML2
+                </SSO>
+            {% endif %}
 
             <!-- SAML and local-only logout. -->
             <Logout>SAML2 Local</Logout>
 
             <!-- Extension service that generates "approximate" metadata based on SP configuration. -->
-            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="true"/>
 
             <!-- Status reporting service. -->
             <Handler type="Status" Location="/Status" acl="127.0.0.1 ::1"/>
@@ -92,14 +78,32 @@
         <!-- MetadataProvider type="XML" uri="https://l-aai.sztaki.hu/idp/saml2/idp/metadata.php" backingFilePath="metadata/sztaki-idp.xml" reloadInterval="18000" / -->
 
 
-        <!-- TODO
-
-      <MetadataProvider type="Dynamic" ignoreTransport="true">
-          <Subst>http://mdx.eduid.hu/entities/$entityID</Subst>
-          <!- MetadataFilter type="Signature" certificate="mdx-test-signer-2015.crt"/->
-      </MetadataProvider>-->
-
         <MetadataProvider type="XML" validate="true" file="metadata/idp-metadata.xml"/>
+
+        {% for provider in SHIBBOLETH_METADATA_PROVIDERS -%}
+            {% if provider.type == 'dynamic' -%}
+                <MetadataProvider type="Dynamic"
+                    ignoreTransport="{{
+                        'true'
+                            if 'ignore_transport' in provider
+                            and provider.ignore_transport
+                        else 'false'}}">
+                    <Subst>{{ provider.url_template }}</Subst>
+                    {% if 'cert_path' in provider -%}
+                        <MetadataFilter type="Signature"
+                            certificate="{{ provider.cert_path }}" />
+                    {% endif %}
+                </MetadataProvider>
+
+            {% elif provider.type == 'XML' and 'path' in provider -%}
+                <MetadataProvider type="XML" reloadChanges="false"
+                    path="{{ provider.path }}"/>
+            {% elif provider.type == 'XML' and 'url' in provider -%}
+                <MetadataProvider type="XML" url="{{ provider.url }}"
+                    backingFilePath="metadata/meta{{ loop.index }}.xml"
+                    reloadInterval="18000" />
+            {% endif %}
+        {% endfor %}
 
         <!-- Map to extract attributes from SAML assertions. -->
         <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
@@ -111,7 +115,7 @@
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
 
         <!-- Simple file-based resolver for using a single keypair. -->
-        <CredentialResolver type="File" key="dev.hexaa.eu-shib-sp-key.pem" certificate="dev.hexaa.eu-shib-sp-cert.pem"/>
+        <CredentialResolver type="File" key="/opt/certs-shib/sp-key.pem" certificate="/opt/certs-shib/sp-cert.pem"/>
 
         <!--
         The default settings can be overridden by creating ApplicationOverride elements (see

@@ -43,6 +43,16 @@
     src: files/
     dest: "{{ frontend_config_dir.path }}"
 
+- name: copy certs from parent role
+  copy:
+    src: files/certs
+    dest: "{{ frontend_config_dir.path }}/shibboleth/"
+
+- name: create shibboleth2.xml from template
+  template:
+    src: shibboleth2.xml.j2
+    dest: "{{ frontend_config_dir.path }}/shibboleth/shibboleth2.xml"
+
 - name: use the redirect config on port 80
   shell: "mv -f {{ frontend_config_dir.path }}/default-hexaa-ssl-redirect.conf {{ frontend_config_dir.path }}/default-hexaa.conf"
   when: HEXAA_FRONTEND_URL_PROTO == "https"
