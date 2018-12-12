@@ -44,3 +44,6 @@ SHIBBOLETH_METADATA_PROVIDERS:
     url_template: https://mdx.domain.tld/entities/$entityID
     ignore_transport: false
     cert_path: ~
+
+SENTRY_DSN: ~
+
