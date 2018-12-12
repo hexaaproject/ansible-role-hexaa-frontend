@@ -1,6 +1,7 @@
 ---
 
 docker_network_name_frontend: hexaa_frontend
+docker_image_tag: for-dev-ansible
 
 
 HEXAA_BACKEND_SECRET: ""

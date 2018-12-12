@@ -10,7 +10,7 @@
   tags: [web]
   docker_container:
     name: hexaa-frontend
-    image: hexaaproject/hexaa-newui:for-dev-ansible
+    image: "hexaaproject/hexaa-newui:{{ docker_image_tag }}"
     networks:
       - name: "{{ docker_network_name_frontend }}"
     volumes:
