@@ -26,19 +26,24 @@
 
 
 - name: create config directory
-  tempfile:
+  file:
+    path: /opt/hexaa/config/frontend
     state: directory
+    mode: 0775
+    owner: www-data
+    group: hbit
+  become: true
   register: frontend_config_dir
+  tags: web
+- name: create ansible generated
+  file: 
+    path: "{{ frontend_config_dir.path }}/00_GENERATED_BY_ANSIBLE"
+    state: touch
   tags: web
 - name: create parameters.yml from template
   template:
     src: parameters.yml.j2
     dest: "{{ frontend_config_dir.path }}/parameters.yml"
-  tags: web
-- name: set config dir permissions
-  file:
-    path: "{{ frontend_config_dir.path }}"
-    mode: 0755
   tags: web
 
 - name: create log dir
