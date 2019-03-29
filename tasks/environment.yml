@@ -61,12 +61,18 @@
   copy:
     src: files/
     dest: "{{ frontend_config_dir.path }}"
+    owner: www-data
+    group: hbit
+  become: true
   tags: [web]
 
 - name: copy certs from parent role
   copy:
     src: files/certs
     dest: "{{ frontend_config_dir.path }}/shibboleth/"
+    owner: www-data
+    group: hbit
+  become: true
   tags: [web]
 
 - name: create shibboleth2.xml from template
