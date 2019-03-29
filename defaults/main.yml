@@ -17,6 +17,8 @@ HEXAA_MAILER_PORT:      ~
 HEXAA_MAILER_USER:      ~
 HEXAA_MAILER_PASSWORD:  ~
 
+HEXAA_BACKEND_FROM_ADDRESS: hexaa@example.com
+
 # path to folder on the target with fullchain.pem and privkey.pem in it:
 HEXAA_FRONTEND_CERTIFICATE_PATH: /etc/letsencrypt/live/
 
@@ -46,4 +48,3 @@ SHIBBOLETH_METADATA_PROVIDERS:
     cert_path: ~
 
 SENTRY_DSN: ~
-

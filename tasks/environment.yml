@@ -20,9 +20,11 @@
 - name: set network list for the main HTTP server container
   set_fact:
     docker_networks: [{name: "{{ docker_network_name_frontend }}"}]
+  tags: [web]
 - set_fact:
     docker_networks: "{{ [{'name':  docker_network_name_backend}] + docker_networks }}"
   when: docker_network_name_backend is defined
+  tags: [web]
 
 
 - name: create config directory
@@ -36,7 +38,7 @@
   register: frontend_config_dir
   tags: web
 - name: create ansible generated
-  file: 
+  file:
     path: "{{ frontend_config_dir.path }}/00_GENERATED_BY_ANSIBLE"
     state: touch
   tags: web
@@ -59,17 +61,21 @@
   copy:
     src: files/
     dest: "{{ frontend_config_dir.path }}"
+  tags: [web]
 
 - name: copy certs from parent role
   copy:
     src: files/certs
     dest: "{{ frontend_config_dir.path }}/shibboleth/"
+  tags: [web]
 
 - name: create shibboleth2.xml from template
   template:
     src: shibboleth2.xml.j2
     dest: "{{ frontend_config_dir.path }}/shibboleth/shibboleth2.xml"
+  tags: [web]
 
 - name: use the redirect config on port 80
   shell: "mv -f {{ frontend_config_dir.path }}/default-hexaa-ssl-redirect.conf {{ frontend_config_dir.path }}/default-hexaa.conf"
   when: HEXAA_FRONTEND_URL_PROTO == "https"
+  tags: [web]
