@@ -29,14 +29,17 @@
   tempfile:
     state: directory
   register: frontend_config_dir
+  tags: web
 - name: create parameters.yml from template
   template:
     src: parameters.yml.j2
     dest: "{{ frontend_config_dir.path }}/parameters.yml"
+  tags: web
 - name: set config dir permissions
   file:
     path: "{{ frontend_config_dir.path }}"
     mode: 0755
+  tags: web
 
 - name: copy Shibboleth and Apache config
   copy:
