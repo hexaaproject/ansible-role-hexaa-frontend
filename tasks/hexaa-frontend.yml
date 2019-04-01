@@ -4,13 +4,18 @@
     name: "{{ docker_network_name_frontend }}"
     state: present
 
-
+- name: docker registry login
+  docker_login:
+    registry: "{{ REGISTRY_URL }}"
+    username: "{{ REGISTRY_USER }}"
+    password: "{{ REGISTRY_PASSWORD }}"
+  when: REGISTRY_URL is defined
 
 - name: start hexaa-frontend
   tags: [web]
   docker_container:
     name: hexaa-frontend
-    image: "hexaaproject/hexaa-newui:{{ docker_image_tag }}"
+    image: "{{ docker_image_name_frontend }}:{{ docker_image_tag_frontend }}"
     networks:
       - name: "{{ docker_network_name_frontend }}"
     volumes:
