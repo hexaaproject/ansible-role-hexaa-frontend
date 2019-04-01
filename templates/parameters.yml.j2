@@ -16,9 +16,9 @@ parameters:
     # TODO: ansible-role-hexaa-frontend
     invitation_config:
         subject: '[HEXAA] invitation'
-        from: no_reply@apitest.hexaa.eu
-        reply-to: no_reply@apitest.hexaa.eu
-        footer: 'sincerely: apitest.hexaa.eu'
+        from: {{ HEXAA_BACKEND_FROM_ADDRESS }}
+        reply-to: {{ HEXAA_BACKEND_FROM_ADDRESS }}
+        footer: 'sincerely: {{ HEXAA_FRONTEND_URL }}'
     mailer_transport:  {{ HEXAA_MAILER_TRANSPORT }}
     mailer_host:       {{ HEXAA_MAILER_HOST }}
     mailer_port:       {{ HEXAA_MAILER_PORT }}

@@ -1,6 +1,8 @@
 ---
 - name: include environment
   include: environment.yml
+  tags: [frontend]
 
 - name: include hexaa-frontend
   include: hexaa-frontend.yml
+  tags: [frontend]

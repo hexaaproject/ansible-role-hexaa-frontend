@@ -16,6 +16,7 @@
   docker_container:
     name: hexaa-frontend
     image: "{{ docker_image_name_frontend }}:{{ docker_image_tag_frontend }}"
+    restart: yes  # to apply config file changes
     networks:
       - name: "{{ docker_network_name_frontend }}"
     volumes:
