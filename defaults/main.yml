@@ -2,7 +2,7 @@
 
 docker_network_name_frontend: hexaa_frontend
 docker_image_name_frontend: hexaaproject/hexaa-newui
-docker_image_tag_frontend: for-dev-ansible
+docker_image_tag_frontend: latest
 
 HEXAA_BACKEND_SECRET: ""
 

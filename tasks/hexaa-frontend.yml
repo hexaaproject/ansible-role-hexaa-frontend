@@ -12,7 +12,6 @@
   when: REGISTRY_URL is defined
 
 - name: start hexaa-frontend
-  tags: [web]
   docker_container:
     name: hexaa-frontend
     image: "{{ docker_image_name_frontend }}:{{ docker_image_tag_frontend }}"
