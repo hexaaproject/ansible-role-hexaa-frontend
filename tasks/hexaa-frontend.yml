@@ -29,7 +29,7 @@
 - name: start hexaa-frontend-web
   docker_container:
     name: hexaa-frontend-web
-    image: solazs/apache-shib
+    image: hexaaproject/apache-shib
     networks: "{{ docker_networks }}"
     ports:
       - 80:80
@@ -48,4 +48,7 @@
       - "{{ frontend_config_dir.path }}/default-hexaa-ssl.conf:/etc/apache2/sites-enabled/000-default-ssl.conf:ro"
       - "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}:/opt/certs:ro"
       - "{{ SHIBBOLETH_CERTIFICATE_PATH }}:/opt/certs-shib:ro"
-    command: "bash -c 'a2enmod proxy proxy_http proxy_ajp proxy_fcgi rewrite deflate headers proxy_balancer proxy_connect proxy_html; httpd-shibd-foreground'"
+    env:
+      APACHE_SHIB_APACHE_MODULES_TO_START: shib ssl proxy proxy_http proxy_ajp rewrite
+    command: "bash -c 'a2enmod proxy_fcgi rewrite deflate headers proxy_balancer proxy_connect proxy_html; httpd-shibd-foreground'"
+  tags: [web]
