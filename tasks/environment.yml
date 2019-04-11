@@ -67,6 +67,16 @@
   become: true
   tags: [web]
 
+- name: create shibboleth config dir
+  file:
+    path: "{{ frontend_config_dir.path }}/shibboleth/"
+    owner: www-data
+    group: hbit
+    state: directory
+    mode: 0775
+  become: true
+  tags: [web]
+
 - name: copy certs from parent role
   copy:
     src: files/certs
