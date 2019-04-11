@@ -1,5 +1,31 @@
 ---
 
+- name: ensure shibboleth cert exists
+  stat:
+    path: "{{ SHIBBOLETH_CERTIFICATE_PATH }}/sp-cert.pem"
+  register: shibboleth_cert
+
+- name: ensure shibboleth privkey exists
+  stat:
+    path: "{{ SHIBBOLETH_CERTIFICATE_PATH }}/sp-key.pem"
+  register: shibboleth_privkey
+
+- name: debug shibboleth cert exists
+  debug:
+    msg: "There is no shibboleth cert at {{ SHIBBOLETH_CERTIFICATE_PATH }}/sp-cert.pem"
+  when: shibboleth_cert.stat.exists == False
+
+- name: debug shibboleth privkey exists
+  debug:
+    msg: "There is no shibboleth privkey at {{ SHIBBOLETH_CERTIFICATE_PATH }}/sp-key.pem"
+  when: shibboleth_privkey.stat.exists == False
+
+- name: fail shibboleth ssl
+  fail:
+    msg: "Fail shibboleth ssl configs see above"
+  when: shibboleth_privkey.stat.exists == False or shibboleth_cert.stat.exists == False
+
+
 - name: ensure webserver cert exists
   stat:
     path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem"
