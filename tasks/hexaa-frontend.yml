@@ -11,6 +11,19 @@
     password: "{{ REGISTRY_PASSWORD }}"
   when: REGISTRY_URL is defined
 
+- name: define volumes list for hexaa-frontend container
+  set_fact:
+    hexaa_frontend_volumes:
+      - "{{ frontend_config_dir.path }}/parameters.yml:/opt/hexaa-newui/app/config/parameters.yml:ro"
+      - "{{ log_dir.path }}:/opt/hexaa-newui/var/logs"
+      # export for the web container
+      - /opt/hexaa-newui/web
+      - /var/run/php
+
+- name: define volumes list for hexaa-frontend container
+  set_fact:
+    hexaa_frontend_volumes: "{{ hexaa_frontend_volumes + hexaa_frontend_additional_volumes }}"
+
 - name: start hexaa-frontend
   docker_container:
     name: hexaa-frontend
@@ -18,13 +31,7 @@
     restart: yes  # to apply config file changes
     networks:
       - name: "{{ docker_network_name_frontend }}"
-    volumes:
-      - "{{ frontend_config_dir.path }}/parameters.yml:/opt/hexaa-newui/app/config/parameters.yml:ro"
-      - "{{ log_dir.path }}:/opt/hexaa-newui/var/logs"
-      # export for the web container
-      - /opt/hexaa-newui/web
-      - /var/run/php
-
+    volumes: "{{ hexaa_frontend_volumes }}"
 
 - name: start hexaa-frontend-web
   docker_container:
