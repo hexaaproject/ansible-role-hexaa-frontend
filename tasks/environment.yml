@@ -64,6 +64,7 @@
     dest: "{{ frontend_config_dir.path }}"
     owner: www-data
     group: hbit
+    mode: 0775
   become: true
   tags: [web]
 
@@ -83,6 +84,7 @@
     dest: "{{ frontend_config_dir.path }}/shibboleth/"
     owner: www-data
     group: hbit
+    mode: 0775
   become: true
   tags: [web]
 
@@ -90,6 +92,7 @@
   template:
     src: shibboleth2.xml.j2
     dest: "{{ frontend_config_dir.path }}/shibboleth/shibboleth2.xml"
+    mode: 0664
   tags: [web]
 
 - name: use the redirect config on port 80
