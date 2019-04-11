@@ -1,5 +1,30 @@
 ---
 
+- name: ensure webserver cert exists
+  stat:
+    path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem"
+  register: webserver_cert
+
+- name: ensure webserver privkey exists
+  stat:
+    path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
+  register: webserver_privkey
+
+- name: debug webserver cert exists
+  debug:
+    msg: "There is no webserver cert at {{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem"
+  when: webserver_cert.stat.exists == False
+
+- name: debug webserver privkey exists
+  debug:
+    msg: "There is no webserver privkey at {{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
+  when: webserver_privkey.stat.exists == False
+
+- name: fail webserver ssl
+  fail:
+    msg: "Fail webserver ssl configs see above"
+  when: webserver_privkey.stat.exists == False or webserver_cert.stat.exists == False
+
 - name: Set scoped key from backend variable
   set_fact:
     HEXAA_FRONTEND_SCOPED_KEY: "{{ HEXAA_BACKEND_MASTERKEY.defaultMasterKey }}"
