@@ -90,12 +90,11 @@
     path: "{{ frontend_config_dir.path }}/00_GENERATED_BY_ANSIBLE"
     state: touch
   become: true
-  tags: web
 - name: create parameters.yml from template
   template:
     src: parameters.yml.j2
     dest: "{{ frontend_config_dir.path }}/parameters.yml"
-  tags: web
+  become: true
 
 - name: create log dir
   file:
@@ -136,8 +135,11 @@
   become: true
   tags: [web]
 
+- name: use the normal config on port 80
+  set_fact:
+    apache_default_conf: default-hexaa.conf
+  when: HEXAA_FRONTEND_URL_PROTO == "http"
 - name: use the redirect config on port 80
-  shell: "mv -f {{ frontend_config_dir.path }}/default-hexaa-ssl-redirect.conf {{ frontend_config_dir.path }}/default-hexaa.conf"
+  set_fact:
+    apache_default_conf: default-hexaa-ssl-redirect.conf
   when: HEXAA_FRONTEND_URL_PROTO == "https"
-  become: true
-  tags: [web]
