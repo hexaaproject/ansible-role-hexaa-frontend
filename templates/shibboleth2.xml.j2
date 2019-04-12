@@ -63,24 +63,6 @@
             helpLocation="/about.html"
             styleSheet="/shibboleth-sp/main.css"/>
 
-        <!-- Example of remotely supplied batch of signed metadata. -->
-        <!--
-        <MetadataProvider type="XML" uri="http://federation.org/federation-metadata.xml"
-              backingFilePath="federation-metadata.xml" reloadInterval="7200">
-            <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
-            <MetadataFilter type="Signature" certificate="fedsigner.pem"/>
-        </MetadataProvider>
-        -->
-
-        <!-- Example of locally maintained metadata. -->
-        <!--
-        <MetadataProvider type="XML" file="partner-metadata.xml"/>
-        -->
-        <!-- MetadataProvider type="XML" uri="https://l-aai.sztaki.hu/idp/saml2/idp/metadata.php" backingFilePath="metadata/sztaki-idp.xml" reloadInterval="18000" / -->
-
-
-        <MetadataProvider type="XML" validate="true" file="metadata/idp-metadata.xml"/>
-
         {% for provider in SHIBBOLETH_METADATA_PROVIDERS -%}
             {% if provider.type == 'dynamic' -%}
                 <MetadataProvider type="Dynamic"
