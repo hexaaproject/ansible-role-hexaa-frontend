@@ -32,6 +32,8 @@
     networks:
       - name: "{{ docker_network_name_frontend }}"
     volumes: "{{ hexaa_frontend_volumes }}"
+    pull: yes
+    restart_policy: "{{ docker_restart_policy }}"
 
 - name: start hexaa-frontend-web
   docker_container:
@@ -44,6 +46,8 @@
     volumes_from:
       # mount the hexaa-newui/web and /var/run/php dirs
       - hexaa-frontend
+    pull: yes
+    restart_policy: "{{ docker_restart_policy }}"
 
     volumes:
       - "{{ frontend_config_dir.path }}/shibboleth/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro"
