@@ -13,18 +13,20 @@
 - name: debug shibboleth cert exists
   debug:
     msg: "There is no shibboleth cert at {{ SHIBBOLETH_CERTIFICATE_PATH }}/sp-cert.pem"
-  when: shibboleth_cert.stat.exists == False
+  when: not shibboleth_cert.stat.exists
 
 - name: debug shibboleth privkey exists
   debug:
     msg: "There is no shibboleth privkey at {{ SHIBBOLETH_CERTIFICATE_PATH }}/sp-key.pem"
-  when: shibboleth_privkey.stat.exists == False
+  when: not shibboleth_privkey.stat.exists
 
 - name: fail shibboleth ssl
   fail:
     msg: "Fail shibboleth ssl configs see above"
-  when: shibboleth_privkey.stat.exists == False or shibboleth_cert.stat.exists == False
+  when: not shibboleth_privkey.stat.exists or not shibboleth_cert.stat.exists
 
+
+# Apache HTTP certificate
 
 - name: ensure webserver cert exists
   stat:
@@ -39,17 +41,50 @@
 - name: debug webserver cert exists
   debug:
     msg: "There is no webserver cert at {{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem"
-  when: webserver_cert.stat.exists == False
+  when: not webserver_cert.stat.exists
 
 - name: debug webserver privkey exists
   debug:
     msg: "There is no webserver privkey at {{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
-  when: webserver_privkey.stat.exists == False
+  when: not webserver_privkey.stat.exists
+
+
+- name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+  openssl_privatekey:
+    path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
+  when:
+    - HEXAA_GENERATE_SELFSIGNED
+    - not webserver_privkey.stat.exists
+
+- name: Generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path:            "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/csr.csr"
+    privatekey_path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
+    common_name: hexaa.local
+  when:
+    - HEXAA_GENERATE_SELFSIGNED
+    - not webserver_cert.stat.exists
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path:            "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem"
+    privatekey_path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
+    csr_path:        "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/csr.csr"
+    provider: selfsigned
+  when:
+    - HEXAA_GENERATE_SELFSIGNED
+    -  not webserver_cert.stat.exists
+
 
 - name: fail webserver ssl
   fail:
     msg: "Fail webserver ssl configs see above"
-  when: webserver_privkey.stat.exists == False or webserver_cert.stat.exists == False
+  when:
+    - not HEXAA_GENERATE_SELFSIGNED
+    - not webserver_privkey.stat.exists or not webserver_cert.stat.exists
+
+
+# Misc
 
 - name: Set scoped key from backend variable
   set_fact:
@@ -60,7 +95,7 @@
     - HEXAA_BACKEND_MASTERKEY.defaultMasterKey is defined
 
 - fail:
-    msg: "The HEXAA backend master key is missing"
+    msg: "The HEXAA backend master key is missing (HEXAA_FRONTEND_SCOPED_KEY or HEXAA_BACKEND_MASTERKEY.defaultMasterKey)"
   when: HEXAA_FRONTEND_SCOPED_KEY == ""
 
 - fail:

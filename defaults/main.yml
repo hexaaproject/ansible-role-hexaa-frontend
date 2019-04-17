@@ -33,6 +33,9 @@ SHIBBOLETH_CERTIFICATE_PATH: /etc/shibboleth
 
 SHIBBOLETH_SP_ENTITYID: https://domain.tld/shibboleth
 
+# enable generating self-signed certificates if the expected files don't exist
+# (not recommended for production use)
+HEXAA_GENERATE_SELFSIGNED: no
 
 # idp or discovery
 SHIBBOLETH_LOGIN_TYPE: idp
