@@ -1,7 +1,7 @@
 ---
 
 docker_network_name_frontend: hexaa_frontend
-docker_image_name_frontend: hexaaproject/hexaa-newui
+docker_image_name_frontend: hexaaproject/hexaa-frontend
 docker_image_tag_frontend: latest
 
 docker_restart_policy: on-failure

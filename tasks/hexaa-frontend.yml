@@ -14,10 +14,10 @@
 - name: define volumes list for hexaa-frontend container
   set_fact:
     hexaa_frontend_volumes:
-      - "{{ frontend_config_dir.path }}/parameters.yml:/opt/hexaa-newui/app/config/parameters.yml:ro"
-      - "{{ log_dir.path }}:/opt/hexaa-newui/var/logs"
+      - "{{ frontend_config_dir.path }}/parameters.yml:/opt/hexaa-frontend/app/config/parameters.yml:ro"
+      - "{{ log_dir.path }}:/opt/hexaa-frontend/var/logs"
       # export for the web container
-      - /opt/hexaa-newui/web
+      - /opt/hexaa-frontend/web
       - /var/run/php
 
 - name: define volumes list for hexaa-frontend container
@@ -44,7 +44,7 @@
       - 80:80
       - 443:443
     volumes_from:
-      # mount the hexaa-newui/web and /var/run/php dirs
+      # mount the hexaa-frontend/web and /var/run/php dirs
       - hexaa-frontend
     pull: yes
     restart_policy: "{{ docker_restart_policy }}"
