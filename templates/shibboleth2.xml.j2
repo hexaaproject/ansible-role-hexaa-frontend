@@ -98,7 +98,7 @@
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
 
         <!-- Simple file-based resolver for using a single keypair. -->
-        <CredentialResolver type="File" key="/opt/certs-shib/sp-key.pem" certificate="/opt/certs-shib/sp-cert.pem"/>
+        <CredentialResolver type="File" key="/etc/shibboleth/sp-key.pem" certificate="/etc/shibboleth/sp-cert.pem"/>
 
         <!--
         The default settings can be overridden by creating ApplicationOverride elements (see

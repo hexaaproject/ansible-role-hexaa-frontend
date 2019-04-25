@@ -1,5 +1,7 @@
 ---
 
+# Shibboleth SP certificate
+
 - name: ensure shibboleth cert exists
   stat:
     path: "{{ SHIBBOLETH_CERTIFICATE_PATH }}/sp-cert.pem"
@@ -23,7 +25,9 @@
 - name: fail shibboleth ssl
   fail:
     msg: "Fail shibboleth ssl configs see above"
-  when: not shibboleth_privkey.stat.exists or not shibboleth_cert.stat.exists
+  when:
+    - not shibboleth_privkey.stat.exists or not shibboleth_cert.stat.exists
+    - not HEXAA_GENERATE_SELFSIGNED
 
 
 # Apache HTTP certificate
@@ -152,7 +156,7 @@
   become: true
   tags: [web]
 
-- name: copy certs from parent role
+- name: copy certs from parent playbook
   copy:
     src: files/certs
     dest: "{{ frontend_config_dir.path }}/shibboleth/"

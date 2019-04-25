@@ -13,6 +13,7 @@ HEXAA_BACKEND_SECRET: ""
 HEXAA_FRONTEND_SCOPED_KEY: ""
 
 #HEXAA_BACKEND_URL:
+HEXAA_FRONTEND_URL_HOST: domain.tld
 #HEXAA_FRONTEND_URL:
 
 HEXAA_MAILER_TRANSPORT: sendmail
@@ -31,7 +32,7 @@ HEXAA_FRONTEND_CERTIFICATE_PATH: /etc/letsencrypt/live/
 # (generating: shib-keygen -f -u _shibd -h $HOSTNAME -y 3 -e $ENTITY_ID -o /etc/shibboleth)
 SHIBBOLETH_CERTIFICATE_PATH: /etc/shibboleth
 
-SHIBBOLETH_SP_ENTITYID: https://domain.tld/shibboleth
+SHIBBOLETH_SP_ENTITYID: https://{{ HEXAA_FRONTEND_URL_HOST }}/shibboleth
 
 # enable generating self-signed certificates if the expected files don't exist
 # (not recommended for production use)
