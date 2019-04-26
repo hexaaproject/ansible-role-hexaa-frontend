@@ -6,15 +6,21 @@ docker_image_tag_frontend: latest
 
 docker_restart_policy: on-failure
 
+# Directory on host where config files and logs should be put
+HEXAA_HOST_DIR: /opt/hexaa
+
 hexaa_frontend_additional_volumes: []
 
 HEXAA_BACKEND_SECRET: ""
 
 HEXAA_FRONTEND_SCOPED_KEY: ""
 
-#HEXAA_BACKEND_URL:
-HEXAA_FRONTEND_URL_HOST: domain.tld
-#HEXAA_FRONTEND_URL:
+HEXAA_FRONTEND_URL_PROTO:   https
+HEXAA_FRONTEND_URL_HOST:    domain.tld
+HEXAA_FRONTEND_URL_PATH:    /
+HEXAA_FRONTEND_URL: "{{HEXAA_FRONTEND_URL_PROTO}}://{{HEXAA_FRONTEND_URL_HOST}}{{HEXAA_FRONTEND_URL_PATH}}"
+
+HEXAA_BACKEND_URL: https://domain.tld/hexaa-backend/
 
 HEXAA_MAILER_TRANSPORT: sendmail
 HEXAA_MAILER_HOST:      ~

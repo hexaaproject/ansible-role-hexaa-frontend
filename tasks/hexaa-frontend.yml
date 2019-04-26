@@ -58,7 +58,7 @@
       - "{{ frontend_config_dir.path }}/{{ apache_default_conf }}:/etc/apache2/sites-enabled/000-default.conf:ro"
       - "{{ frontend_config_dir.path }}/default-hexaa-ssl.conf:/etc/apache2/sites-enabled/000-default-ssl.conf:ro"
       - "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}:/opt/certs:ro"
-      - "{{ SHIBBOLETH_CERTIFICATE_PATH }}:/opt/certs-shib:ro"
+      - "{{ SHIBBOLETH_CERTIFICATE_PATH }}:/opt/certs-shib"
     env:
       APACHE_SHIB_APACHE_MODULES_TO_START: shib ssl deflate proxy proxy_fcgi proxy_http proxy_html proxy_balancer proxy_ajp proxy_connect rewrite headers
       APACHE_SHIB_SHIB_GENERATE_KEY: "{{ 1 if HEXAA_GENERATE_SELFSIGNED else 0 }}"

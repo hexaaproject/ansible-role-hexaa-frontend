@@ -119,7 +119,7 @@
 
 - name: create config directory
   file:
-    path: /opt/hexaa/config/frontend
+    path: "{{ HEXAA_HOST_DIR }}/config/frontend"
     state: directory
   become: true
   register: frontend_config_dir
@@ -137,7 +137,7 @@
 
 - name: create log dir
   file:
-    path: /opt/hexaa/logs/frontend
+    path: "{{ HEXAA_HOST_DIR }}/logs/frontend"
     state: directory
     mode: ugo+rwxt
   register: log_dir
