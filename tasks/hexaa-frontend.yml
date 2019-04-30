@@ -38,11 +38,10 @@
 - name: start hexaa-frontend-web
   docker_container:
     name: hexaa-frontend-web
+    hostname: hexaa-frontend-web
     image: hexaaproject/apache-shib
     networks: "{{ docker_networks }}"
-    ports:
-      - 80:80
-      - 443:443
+    ports: "{{ HEXAA_FRONTEND_WEB_PORT }}"
     volumes_from:
       # mount the hexaa-frontend/web and /var/run/php dirs
       - hexaa-frontend
@@ -64,6 +63,8 @@
       APACHE_SHIB_SHIB_GENERATE_KEY: "{{ 1 if HEXAA_GENERATE_SELFSIGNED else 0 }}"
       APACHE_SHIB_SHIB_HOSTNAME:     "{{ HEXAA_FRONTEND_URL_HOST }}"
       APACHE_SHIB_SHIB_ENTITY_ID:    "{{ SHIBBOLETH_SP_ENTITYID }}"
+      # for Nginx proxy, port is removed:
+      VIRTUAL_HOST: "{{ HEXAA_FRONTEND_URL_HOST | regex_replace(':[0-9]+') }}"
 
 
   tags: [web]

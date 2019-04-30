@@ -109,7 +109,8 @@
 
 - name: set network list for the main HTTP server container
   set_fact:
-    docker_networks: [{name: "{{ docker_network_name_frontend }}"}]
+    docker_networks: [{name: "{{ docker_network_name_frontend }}",
+                       aliases: ["{{ HEXAA_FRONTEND_URL_HOST | regex_replace(':[0-9]+') }}"]  }]
   tags: [web]
 - set_fact:
     docker_networks: "{{ [{'name':  docker_network_name_backend}] + docker_networks }}"

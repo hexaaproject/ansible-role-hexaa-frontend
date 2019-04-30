@@ -20,6 +20,10 @@ HEXAA_FRONTEND_URL_HOST:    domain.tld
 HEXAA_FRONTEND_URL_PATH:    /
 HEXAA_FRONTEND_URL: "{{HEXAA_FRONTEND_URL_PROTO}}://{{HEXAA_FRONTEND_URL_HOST}}{{HEXAA_FRONTEND_URL_PATH}}"
 
+# you should change this variable if you wish to run the Apache+Shibboleth
+# container behind a reverse proxy
+HEXAA_FRONTEND_WEB_PORT: ['80:80', '443:443']
+
 HEXAA_BACKEND_URL: https://domain.tld/hexaa-backend/
 
 HEXAA_MAILER_TRANSPORT: sendmail

@@ -1,5 +1,6 @@
 parameters:
     secret: {{ HEXAA_BACKEND_SECRET }}
+    kernel.secret: {{ HEXAA_BACKEND_SECRET }}
     shib_auth_username_attribute: eppn
     #shib_auth_username_attribute: eduPersonPrincipalName
     shib_auth_module_attribute: Shib-Application-ID
@@ -26,4 +27,3 @@ parameters:
     mailer_password:   {{ HEXAA_MAILER_PASSWORD }}
 
     sentry_dsn:        {{ SENTRY_DSN }}
-
