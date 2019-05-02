@@ -122,19 +122,16 @@
   file:
     path: "{{ HEXAA_HOST_DIR }}/config/frontend"
     state: directory
-  become: true
   register: frontend_config_dir
   tags: web
 - name: create ansible generated
   file:
     path: "{{ frontend_config_dir.path }}/00_GENERATED_BY_ANSIBLE"
     state: touch
-  become: true
 - name: create parameters.yml from template
   template:
     src: parameters.yml.j2
     dest: "{{ frontend_config_dir.path }}/parameters.yml"
-  become: true
 
 - name: create log dir
   file:
@@ -142,33 +139,28 @@
     state: directory
     mode: ugo+rwxt
   register: log_dir
-  become: true
 
 - name: copy Shibboleth and Apache config
   copy:
     src: files/
     dest: "{{ frontend_config_dir.path }}"
-  become: true
   tags: [web]
 
 - name: create shibboleth config dir
   file:
     path: "{{ frontend_config_dir.path }}/shibboleth/"
-  become: true
   tags: [web]
 
 - name: copy certs from parent playbook
   copy:
     src: files/certs
     dest: "{{ frontend_config_dir.path }}/shibboleth/"
-  become: true
   tags: [web]
 
 - name: create shibboleth2.xml from template
   template:
     src: shibboleth2.xml.j2
     dest: "{{ frontend_config_dir.path }}/shibboleth/shibboleth2.xml"
-  become: true
   tags: [web]
 
 - name: use the normal config on port 80
