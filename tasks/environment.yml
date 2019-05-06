@@ -64,7 +64,7 @@
   openssl_csr:
     path:            "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/csr.csr"
     privatekey_path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
-    common_name: hexaa.local
+    common_name:     "{{ HEXAA_FRONTEND_URL_HOST }}"
   when:
     - HEXAA_GENERATE_SELFSIGNED
     - not webserver_cert.stat.exists
@@ -77,7 +77,7 @@
     provider: selfsigned
   when:
     - HEXAA_GENERATE_SELFSIGNED
-    -  not webserver_cert.stat.exists
+    - not webserver_cert.stat.exists
 
 
 - name: fail webserver ssl
@@ -87,6 +87,20 @@
     - not HEXAA_GENERATE_SELFSIGNED
     - not webserver_privkey.stat.exists or not webserver_cert.stat.exists
 
+
+- name: use the normal config on port 80
+  set_fact:
+    apache_default_conf: default-hexaa.conf
+    handle_ssl: false
+  when:
+    - HEXAA_FRONTEND_URL_PROTO == "http" or HEXAA_FRONTEND_WEB_BEHIND_PROXY
+- name: use the redirect config on port 80
+  set_fact:
+    apache_default_conf: default-hexaa-ssl-redirect.conf
+    handle_ssl: true
+  when:
+    - HEXAA_FRONTEND_URL_PROTO == "https"
+    - not HEXAA_FRONTEND_WEB_BEHIND_PROXY
 
 # Misc
 
@@ -162,12 +176,3 @@
     src: shibboleth2.xml.j2
     dest: "{{ frontend_config_dir.path }}/shibboleth/shibboleth2.xml"
   tags: [web]
-
-- name: use the normal config on port 80
-  set_fact:
-    apache_default_conf: default-hexaa.conf
-  when: HEXAA_FRONTEND_URL_PROTO == "http"
-- name: use the redirect config on port 80
-  set_fact:
-    apache_default_conf: default-hexaa-ssl-redirect.conf
-  when: HEXAA_FRONTEND_URL_PROTO == "https"
