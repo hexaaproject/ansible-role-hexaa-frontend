@@ -64,7 +64,9 @@
       APACHE_SHIB_SHIB_HOSTNAME:     "{{ HEXAA_FRONTEND_URL_HOST }}"
       APACHE_SHIB_SHIB_ENTITY_ID:    "{{ SHIBBOLETH_SP_ENTITYID }}"
       # for Nginx proxy, port is removed:
-      VIRTUAL_HOST: "{{ HEXAA_FRONTEND_URL_HOST | regex_replace(':[0-9]+') }}"
+      VIRTUAL_HOST:  "{{ HEXAA_FRONTEND_URL_HOST | regex_replace(':[0-9]+') }}"
+      VIRTUAL_PROTO: "{{ HEXAA_FRONTEND_URL_PROTO }}"
+      VIRTUAL_PORT:  "{{ 443 if HEXAA_FRONTEND_URL_PROTO == 'https' else 80 }}"
 
 
   tags: [web]
