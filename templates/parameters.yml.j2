@@ -26,4 +26,6 @@ parameters:
     mailer_user:       {{ HEXAA_MAILER_USER }}
     mailer_password:   {{ HEXAA_MAILER_PASSWORD }}
 
+    ssl_cert_verify:   {{ not HEXAA_GENERATE_SELFSIGNED }}
+
     sentry_dsn:        {{ SENTRY_DSN }}

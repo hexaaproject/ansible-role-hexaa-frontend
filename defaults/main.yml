@@ -6,6 +6,8 @@ docker_image_tag_frontend: latest
 
 docker_restart_policy: on-failure
 
+docker_etc_hosts: {}
+
 # Directory on host where config files and logs should be put
 HEXAA_HOST_DIR: /opt/hexaa
 
@@ -17,7 +19,7 @@ HEXAA_FRONTEND_SCOPED_KEY: ""
 
 HEXAA_FRONTEND_URL_PROTO:   https
 HEXAA_FRONTEND_URL_HOST:    domain.tld
-HEXAA_FRONTEND_URL_PATH:    /
+HEXAA_FRONTEND_URL_PATH:    ""  # don't put a slash at the end
 HEXAA_FRONTEND_URL: "{{HEXAA_FRONTEND_URL_PROTO}}://{{HEXAA_FRONTEND_URL_HOST}}{{HEXAA_FRONTEND_URL_PATH}}"
 
 # you should change this variable if you wish to run the Apache+Shibboleth

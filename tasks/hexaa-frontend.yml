@@ -31,6 +31,7 @@
     restart: yes  # to apply config file changes
     networks:
       - name: "{{ docker_network_name_frontend }}"
+    etc_hosts: "{{ docker_etc_hosts }}"
     volumes: "{{ hexaa_frontend_volumes }}"
     pull: yes
     restart_policy: "{{ docker_restart_policy }}"
@@ -67,6 +68,4 @@
       VIRTUAL_HOST:  "{{ HEXAA_FRONTEND_URL_HOST | regex_replace(':[0-9]+') }}"
       VIRTUAL_PROTO: "{{ HEXAA_FRONTEND_URL_PROTO }}"
       VIRTUAL_PORT:  "{{ 443 if HEXAA_FRONTEND_URL_PROTO == 'https' else 80 }}"
-
-
   tags: [web]
