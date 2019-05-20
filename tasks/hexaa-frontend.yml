@@ -3,6 +3,7 @@
   docker_network:
     name: "{{ docker_network_name_frontend }}"
     state: present
+  tags: [always]
 
 - name: docker registry login
   docker_login:

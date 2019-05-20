@@ -165,10 +165,11 @@
     path: "{{ frontend_config_dir.path }}/shibboleth/"
   tags: [web]
 
-- name: copy certs from parent playbook
+- name: copy optional certs for shibboleth from parent playbook
   copy:
-    src: files/certs
+    src: files/shib_certs
     dest: "{{ frontend_config_dir.path }}/shibboleth/"
+  ignore_errors: yes
   tags: [web]
 
 - name: create shibboleth2.xml from template
