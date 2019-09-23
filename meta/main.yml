@@ -1,3 +1,13 @@
 ---
+galaxy_info:
+  role_name: hexaa_frontend
+  description: Installs and configures HEXAA frontend and its dependencies
+  company: MTA SZTAKI
+  author: Péter Tóth
+
+  license: GPLv3
+
+  min_ansible_version: 2.5
+
 dependencies: []
 
