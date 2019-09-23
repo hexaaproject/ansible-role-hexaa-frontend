@@ -78,6 +78,8 @@
   when:
     - HEXAA_GENERATE_SELFSIGNED
     - not webserver_cert.stat.exists
+  notify:
+    - restart frontend-web
 
 
 - name: fail webserver ssl
@@ -137,15 +139,20 @@
     path: "{{ HEXAA_HOST_DIR }}/config/frontend"
     state: directory
   register: frontend_config_dir
+  notify:
+    - restart frontend
   tags: web
 - name: create ansible generated
   file:
     path: "{{ frontend_config_dir.path }}/00_GENERATED_BY_ANSIBLE"
     state: touch
+  changed_when: false
 - name: create parameters.yml from template
   template:
     src: parameters.yml.j2
     dest: "{{ frontend_config_dir.path }}/parameters.yml"
+  notify:
+    - restart frontend
 
 - name: create log dir
   file:
@@ -153,11 +160,15 @@
     state: directory
     mode: ugo+rwxt
   register: log_dir
+  notify:
+    - restart frontend
 
 - name: copy Shibboleth and Apache config
   copy:
     src: files/
     dest: "{{ frontend_config_dir.path }}"
+  notify:
+    - restart frontend-web
   tags: [web]
 
 - name: create shibboleth config dir
@@ -170,10 +181,14 @@
     src: files/shib_certs
     dest: "{{ frontend_config_dir.path }}/shibboleth/"
   ignore_errors: yes
+  notify:
+    - restart frontend-web
   tags: [web]
 
 - name: create shibboleth2.xml from template
   template:
     src: shibboleth2.xml.j2
     dest: "{{ frontend_config_dir.path }}/shibboleth/shibboleth2.xml"
+  notify:
+    - restart frontend-web
   tags: [web]

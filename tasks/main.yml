@@ -1,8 +1,8 @@
 ---
 - name: include environment
-  include: environment.yml
+  import_tasks: environment.yml
   tags: [frontend]
 
 - name: include hexaa-frontend
-  include: hexaa-frontend.yml
+  import_tasks: hexaa-frontend.yml
   tags: [frontend]

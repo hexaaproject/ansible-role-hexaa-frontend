@@ -29,13 +29,15 @@
   docker_container:
     name: hexaa-frontend
     image: "{{ docker_image_name_frontend }}:{{ docker_image_tag_frontend }}"
-    restart: yes  # to apply config file changes
     networks:
       - name: "{{ docker_network_name_frontend }}"
     etc_hosts: "{{ docker_etc_hosts }}"
     volumes: "{{ hexaa_frontend_volumes }}"
     pull: yes
     restart_policy: "{{ docker_restart_policy }}"
+  notify:
+    - restart frontend-web
+
 
 - name: start hexaa-frontend-web
   docker_container:
@@ -43,6 +45,7 @@
     hostname: hexaa-frontend-web
     image: hexaaproject/apache-shib
     networks: "{{ docker_networks }}"
+    etc_hosts: "{{ docker_etc_hosts }}"
     ports: "{{ HEXAA_FRONTEND_WEB_PORT }}"
     volumes_from:
       # mount the hexaa-frontend/web and /var/run/php dirs

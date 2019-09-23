@@ -1,0 +1,16 @@
+---
+
+- name: Restart frontend PHP container
+  listen:
+    - restart frontend
+  docker_container:
+    name: hexaa-frontend
+    restart: yes
+
+- name: Restart frontend web server
+  listen:
+    - restart frontend-web
+    - restart backend-web
+  docker_container:
+    name: hexaa-frontend-web
+    restart: yes
