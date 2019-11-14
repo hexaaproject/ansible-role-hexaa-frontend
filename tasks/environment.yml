@@ -180,7 +180,7 @@
   copy:
     src: files/shib_certs
     dest: "{{ frontend_config_dir.path }}/shibboleth/"
-  ignore_errors: yes
+  failed_when: false
   notify:
     - restart frontend-web
   tags: [web]

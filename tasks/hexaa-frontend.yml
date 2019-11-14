@@ -25,6 +25,13 @@
   set_fact:
     hexaa_frontend_volumes: "{{ hexaa_frontend_volumes + hexaa_frontend_additional_volumes }}"
 
+- name: update hexaa-frontend image
+  docker_image:
+    name: "{{ docker_image_name_frontend }}:{{ docker_image_tag_frontend }}"
+    source: pull
+    force_source: yes
+  failed_when: false
+
 - name: start hexaa-frontend
   docker_container:
     name: hexaa-frontend
@@ -33,7 +40,7 @@
       - name: "{{ docker_network_name_frontend }}"
     etc_hosts: "{{ docker_etc_hosts }}"
     volumes: "{{ hexaa_frontend_volumes }}"
-    pull: yes
+    pull: no
     restart_policy: "{{ docker_restart_policy }}"
   notify:
     - restart frontend-web
