@@ -8,7 +8,7 @@ docker_restart_policy: on-failure
 
 docker_etc_hosts: {}
 
-# Directory on host where config files and logs should be put
+# Directory on host where config files and logs will be stored
 HEXAA_HOST_DIR: /opt/hexaa
 
 hexaa_frontend_additional_volumes: []
