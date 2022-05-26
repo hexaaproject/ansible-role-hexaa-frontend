@@ -68,7 +68,8 @@
       - "{{ frontend_config_dir.path }}/shibboleth/certs:/etc/shibboleth/certs:ro"
       - "{{ frontend_config_dir.path }}/{{ apache_default_conf }}:/etc/apache2/sites-enabled/000-default.conf:ro"
       - "{{ frontend_config_dir.path }}/default-hexaa-ssl.conf:/etc/apache2/sites-enabled/000-default-ssl.conf:ro"
-      - "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}:/opt/certs:ro"
+      - "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem:/opt/certs/fullchain.pem:ro"
+      - "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem:/opt/certs/privkey.pem:ro"
       - "{{ SHIBBOLETH_CERTIFICATE_PATH }}:/opt/certs-shib"
     env:
       APACHE_SHIB_APACHE_MODULES_TO_START: shib ssl deflate proxy proxy_fcgi proxy_http proxy_html proxy_balancer proxy_ajp proxy_connect rewrite headers
