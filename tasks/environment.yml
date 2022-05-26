@@ -52,34 +52,33 @@
     msg: "There is no webserver privkey at {{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
   when: not webserver_privkey.stat.exists
 
+- name: Generate certificate for frontend webserver
+  block:
+    - name: Make sure cert folder exists
+      file:
+        path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}"
+        state: directory
+    - name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+      openssl_privatekey:
+        path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
 
-- name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
-  openssl_privatekey:
-    path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
-  when:
-    - HEXAA_GENERATE_SELFSIGNED
-    - not webserver_privkey.stat.exists
+    - name: Generate an OpenSSL Certificate Signing Request
+      openssl_csr:
+        path:            "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/csr.csr"
+        privatekey_path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
+        common_name:     "{{ HEXAA_FRONTEND_URL_HOST }}"
 
-- name: Generate an OpenSSL Certificate Signing Request
-  openssl_csr:
-    path:            "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/csr.csr"
-    privatekey_path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
-    common_name:     "{{ HEXAA_FRONTEND_URL_HOST }}"
+    - name: Generate a Self Signed OpenSSL certificate
+      openssl_certificate:
+        path:            "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem"
+        privatekey_path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
+        csr_path:        "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/csr.csr"
+        provider: selfsigned
+      notify:
+        - restart frontend-web
   when:
     - HEXAA_GENERATE_SELFSIGNED
     - not webserver_cert.stat.exists
-
-- name: Generate a Self Signed OpenSSL certificate
-  openssl_certificate:
-    path:            "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/fullchain.pem"
-    privatekey_path: "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/privkey.pem"
-    csr_path:        "{{ HEXAA_FRONTEND_CERTIFICATE_PATH }}/csr.csr"
-    provider: selfsigned
-  when:
-    - HEXAA_GENERATE_SELFSIGNED
-    - not webserver_cert.stat.exists
-  notify:
-    - restart frontend-web
 
 
 - name: fail webserver ssl
